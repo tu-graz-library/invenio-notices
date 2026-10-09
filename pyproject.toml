@@ -1,0 +1,108 @@
+# SPDX-FileCopyrightText: 2026 Graz University of Technology.
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+dynamic = ["version"]
+name = "invenio-notices"
+description = "Invenio module to show notices to users."
+authors = [
+  {name = "Graz University of Technology", email = "info@tugraz.at"},
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = ["invenio", "notices"]
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+  "invenio-i18n>=3.0.0",
+]
+
+[project.optional-dependencies]
+tests = [
+  "pytest-black>=0.6.0",
+  "pytest-invenio>=4.0.0",
+  "ruff>=0.9.6",
+]
+
+[project.entry-points."invenio_base.apps"]
+invenio_notices = "invenio_notices:InvenioNotices"
+
+[project.urls]
+Repository = "https://github.com/tu-graz-library/invenio-notices"
+
+
+# Tools, in alphabetical order
+[[tool.babel.mappings]]
+encoding = 'utf-8'
+method = 'python'
+pattern = '**.py'
+
+[[tool.babel.mappings]]
+encoding = 'utf-8'
+method = 'jinja2'
+pattern = '**/templates/**.html'
+
+[[tool.babel.mappings]]
+encoding = 'utf-8'
+extract_messages = "$._, jQuery._"
+method = 'javascript'
+pattern = '**.js'
+
+
+[tool.hatch.build]
+exclude = [
+  "run-tests.sh",
+  "tests/**",
+]
+
+[tool.hatch.version]
+path = "invenio_notices/__init__.py"
+
+
+[tool.isort]
+profile = "black"
+
+
+[tool.pytest.ini_options]
+addopts = "--black --cov=invenio_notices --cov-report=term-missing"
+testpaths = "tests invenio_notices"
+
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+  "D203", "D211", "D212", "D213",
+  "E501",
+  "FA100", "FA102",
+  "FIX002",
+  "INP001",
+  "N999",
+  "PERF203",
+  "PLR0913",
+  "S101",
+  "TC002",
+  "TD002", "TD003",
+  "TID252",
+  "UP009",
+]
+fixable = [
+  "RUF022",  # unsorted __all__
+]
+
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = "SPDX-FileCopyrightText:"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**.py" = [
+  "ANN201",
+]
