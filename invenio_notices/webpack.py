@@ -17,6 +17,7 @@ theme = WebpackThemeBundle(
             "dependencies": {
                 "react": "^16.13.0",
                 "react-dom": "^16.13.0",
+                "react-invenio-forms": "^4.11.0",
             },
         },
     },

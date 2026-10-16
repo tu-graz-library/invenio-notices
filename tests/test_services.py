@@ -95,7 +95,10 @@ def test_roles_match_with_required_roles() -> None:
 def test_visible_items_plain() -> None:
     """Plain items are shown to everyone."""
     notice = {"items": ["first", "second"]}
-    assert service._visible_items(notice, set()) == ["first", "second"]
+    assert service._visible_items(notice, set()) == [
+        {"text": "first", "restricted": False},
+        {"text": "second", "restricted": False},
+    ]
 
 
 def test_visible_items_filters_by_role() -> None:
@@ -106,10 +109,12 @@ def test_visible_items_filters_by_role() -> None:
             {"text": "for curators", "roles": ["curator"]},
         ],
     }
-    assert service._visible_items(notice, set()) == ["plain"]
+    assert service._visible_items(notice, set()) == [
+        {"text": "plain", "restricted": False},
+    ]
     assert service._visible_items(notice, {"curator"}) == [
-        "plain",
-        "for curators",
+        {"text": "plain", "restricted": False},
+        {"text": "for curators", "restricted": True},
     ]
 
 
@@ -164,6 +169,32 @@ def test_pending_for_guests(monkeypatch: pytest.MonkeyPatch) -> None:
         "outro": "",
         "accent": False,
     }
+
+
+def test_pending_accents_role_content(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A card accents when role gated content is shown."""
+    _login(monkeypatch, roles={"curator"}, seen=set())
+    app = _app(
+        NOTICES=[
+            {
+                "key": "a",
+                "title": "t",
+                "intro": "i",
+                "items": ["plain", {"text": "extra", "roles": ["curator"]}],
+            },
+            {
+                "key": "b",
+                "roles": ["curator"],
+                "title": "t",
+                "intro": "i",
+                "items": [],
+            },
+            {"key": "c", "title": "t", "intro": "i", "items": ["plain"]},
+        ],
+    )
+    with app.test_request_context():
+        pending = service.pending()
+    assert [notice["accent"] for notice in pending] == [True, True, False]
 
 
 def test_pending_skips_acknowledged(monkeypatch: pytest.MonkeyPatch) -> None:

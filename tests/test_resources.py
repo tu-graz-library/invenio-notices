@@ -14,10 +14,10 @@ from invenio_db import InvenioDB, db
 
 from invenio_notices import InvenioNotices
 from invenio_notices.records.models import NoticeAcknowledgment
-from invenio_notices.resources import NoticesResource, NoticesResourceConfig
 from invenio_notices.resources import resources as resources_module
 from invenio_notices.services import NoticesService
 from invenio_notices.services import services as services_module
+from invenio_notices.views import create_notices_bp
 
 
 @pytest.fixture
@@ -30,7 +30,7 @@ def app(tmp_path: Path) -> Iterator[Flask]:
     )
     InvenioDB(app)
     InvenioNotices(app)
-    app.register_blueprint(NoticesResource(NoticesResourceConfig()).as_blueprint())
+    app.register_blueprint(create_notices_bp(app))
     with app.app_context():
         db.create_all()
         yield app

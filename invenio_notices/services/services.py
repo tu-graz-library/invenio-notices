@@ -65,14 +65,20 @@ class NoticesService:
                 continue
             if not self._in_time_window(notice):
                 continue
+            items = self._visible_items(notice, held)
+            accent = bool(
+                notice.get("accent")
+                or notice.get("roles")
+                or any(item["restricted"] for item in items),
+            )
             notices.append(
                 {
                     "key": notice["key"],
                     "title": str(notice["title"]),
                     "intro": str(notice["intro"]),
-                    "items": self._visible_items(notice, held),
+                    "items": [item["text"] for item in items],
                     "outro": str(notice["outro"]) if notice.get("outro") else "",
-                    "accent": bool(notice.get("accent")),
+                    "accent": accent,
                 },
             )
         return notices
@@ -102,19 +108,24 @@ class NoticesService:
         """Check whether the visitor holds one of the required roles."""
         return not roles or any(role in held for role in roles)
 
-    def _visible_items(self, notice: dict, held: set[str]) -> list[str]:
-        """Return the item texts the visitor is allowed to see."""
+    def _visible_items(self, notice: dict, held: set[str]) -> list[dict]:
+        """Return the items the visitor is allowed to see.
+
+        Role restricted items are marked so the card can show accented.
+        """
         result = []
         for item in notice["items"]:
             if not isinstance(item, dict):
-                result.append(str(item))
+                result.append({"text": str(item), "restricted": False})
                 continue
             if not self._roles_match(item.get("roles"), held):
                 continue
             feature = item.get("feature")
             if feature and not self._feature_on(feature):
                 continue
-            result.append(str(item["text"]))
+            result.append(
+                {"text": str(item["text"]), "restricted": bool(item.get("roles"))},
+            )
         return result
 
     def _feature_on(self, name: str) -> bool:

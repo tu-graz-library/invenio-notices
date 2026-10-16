@@ -76,6 +76,6 @@ def test_visible_items_filters_by_feature() -> None:
     }
     with app.app_context():
         assert service._visible_items(notice, set()) == [
-            "plain",
-            "new upload form",
+            {"text": "plain", "restricted": False},
+            {"text": "new upload form", "restricted": False},
         ]

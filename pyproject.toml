@@ -26,6 +26,7 @@ requires-python = ">=3.14"
 dependencies = [
   "flask-resources>=1.0.0",
   "invenio-accounts>=8.0.0",
+  "invenio-assets>=4.0.0",
   "invenio-db>=2.0.0",
   "invenio-i18n>=3.0.0",
 ]
@@ -37,14 +38,29 @@ tests = [
   "ruff>=0.9.6",
 ]
 
+[project.entry-points."invenio_assets.webpack"]
+invenio_notices = "invenio_notices.webpack:theme"
+
+[project.entry-points."invenio_base.api_blueprints"]
+invenio_notices = "invenio_notices.views:create_notices_bp"
+
 [project.entry-points."invenio_base.apps"]
 invenio_notices = "invenio_notices:InvenioNotices"
+
+[project.entry-points."invenio_base.blueprints"]
+invenio_notices = "invenio_notices.views:blueprint"
+
+[project.entry-points."invenio_base.finalize_app"]
+invenio_notices = "invenio_notices.ext:finalize_app"
 
 [project.entry-points."invenio_db.alembic"]
 invenio_notices = "invenio_notices:alembic"
 
 [project.entry-points."invenio_db.models"]
 invenio_notices = "invenio_notices.records.models"
+
+[project.entry-points."invenio_i18n.translations"]
+messages = "invenio_notices"
 
 [project.urls]
 Repository = "https://github.com/tu-graz-library/invenio-notices"

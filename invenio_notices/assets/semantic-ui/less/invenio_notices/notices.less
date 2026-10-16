@@ -3,4 +3,135 @@
  * SPDX-License-Identifier: MIT
  */
 
-/* TODO: add the notice card styling. */
+@noticeColor: #048622;
+@noticeAccentColor: #2185d0;
+@noticeAccentBackground: #eef6fc;
+@noticeHeadingText: #231f20;
+@noticeText: #6b6d74;
+@noticeMutedText: #94959a;
+@noticeBorder: rgba(34, 36, 38, 0.08);
+
+/* pending notices stack in here */
+#notices {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: calc(100vh - 2rem);
+}
+
+.notice {
+  position: relative;
+  width: 22rem;
+  max-width: calc(100vw - 2rem);
+  min-height: 0;
+  padding: 1.5rem 1.5rem 1.25rem;
+  background: #ffffff;
+  border: 1px solid @noticeBorder;
+  border-left: 4px solid @noticeColor;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    margin: 0 0 0.35rem;
+    font-size: 1.3rem;
+    color: @noticeHeadingText;
+  }
+
+  p {
+    margin: 0 0 1rem;
+    color: @noticeText;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  li {
+    position: relative;
+    padding: 0.5rem 0 0.5rem 1.1rem;
+    border-bottom: 1px solid @noticeBorder;
+    color: @noticeText;
+  }
+
+  li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.9rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: @noticeColor;
+  }
+
+}
+
+/* accented notice: mark it as additional info, distinct from the plain card */
+.notice--accent {
+  border-left: 4px solid @noticeAccentColor;
+  background: @noticeAccentBackground;
+
+  li::before {
+    background: @noticeAccentColor;
+  }
+
+  .notice-dismiss {
+    background: @noticeAccentColor;
+  }
+}
+
+.notice-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  border: none;
+  background: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: @noticeMutedText;
+  cursor: pointer;
+}
+
+.notice-close:hover {
+  color: @noticeHeadingText;
+}
+
+.notice-dismiss {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: @noticeColor;
+  cursor: pointer;
+}
+
+.notice-dismiss:hover {
+  filter: brightness(0.94);
+}
+
+@media screen and (max-width: 480px) {
+  #notices {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+  }
+
+  .notice {
+    width: auto;
+    max-width: none;
+  }
+}
