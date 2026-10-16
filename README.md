@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 
 # invenio-notices
 
-[![License](https://img.shields.io/github/license/tu-graz-library/invenio-notices.svg)](https://github.com/tu-graz-library/invenio-notices/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/tu-graz-library/invenio-notices.svg)](https://github.com/tu-graz-library/invenio-notices/blob/main/LICENSE)
 
 Invenio module to show notices to users.
 
